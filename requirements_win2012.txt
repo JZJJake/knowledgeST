@@ -1,0 +1,16 @@
+# Windows Server 2012 R2 & Python 3.11 Compatible Dependencies
+# Enforce pre-compiled wheels to prevent local C++ compilation
+
+fastapi==0.103.1
+uvicorn==0.23.2
+sqlalchemy==2.0.21
+aiohttp==3.8.5
+pydantic==2.4.2
+openai==0.28.1
+sentence-transformers==2.2.2
+
+# ChromaDB and its dependencies are notorious for requiring C++ build tools on Windows
+# Pinning to a specific version that provides pre-compiled hnswlib wheels for Python 3.11 Windows.
+# hnswlib 0.7.0 has cp311-win_amd64 wheels.
+hnswlib==0.7.0
+chromadb==0.4.14

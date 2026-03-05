@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Academic Knowledge Graph</title>
+    <script src="https://unpkg.com/3d-force-graph"></script>
+    <script src="https://unpkg.com/three"></script>
+    <script src="https://unpkg.com/three-spritetext"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+        #graph-container {
+            width: 100vw;
+            height: 100vh;
+        }
+        #ui-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(20, 20, 20, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #333;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background: #222;
+            color: white;
+        }
+        button {
+            cursor: pointer;
+            background: #0066cc;
+            border: none;
+        }
+        button:hover {
+            background: #0052a3;
+        }
+        #info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 10;
+            display: none;
+            border: 1px solid #444;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .close-btn:hover {
+            color: #fff;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            display: none;
+            z-index: 20;
+        }
+        .controls {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #444;
+        }
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .toggle-switch input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui-panel">
+        <h3>Knowledge Graph Explorer</h3>
+        <input type="text" id="term-input" placeholder="Enter professional term..." />
+        <button id="search-btn">Search & Generate</button>
+        <div id="status"></div>
+
+        <div class="controls">
+            <div class="toggle-switch">
+                <input type="checkbox" id="magnifier-toggle" />
+                <label for="magnifier-toggle">Magnifying Glass Mode</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="info-panel">
+        <span class="close-btn" onclick="document.getElementById('info-panel').style.display='none'">&times;</span>
+        <h3 id="info-title">Node Info</h3>
+        <div id="info-content"></div>
+    </div>
+
+    <div id="loading" class="loading">Processing and vectorizing... Please wait.</div>
+
+    <div id="graph-container"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>
