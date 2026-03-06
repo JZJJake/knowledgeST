@@ -30,6 +30,10 @@ if __name__ == "__main__":
     PORT = 8000
     HOST = "127.0.0.1"
 
+    # Force HuggingFace to use a domestic mirror to prevent connection timeouts
+    # when downloading the sentence-transformers embedding model for the first time.
+    os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+
     print("Checking system ports...")
     if check_port_in_use(PORT, HOST):
         print(f"\n[ERROR] Port {PORT} is already in use by another service on this system.")
