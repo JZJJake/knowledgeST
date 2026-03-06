@@ -43,6 +43,26 @@ if __name__ == "__main__":
     os.makedirs(hf_cache_dir, exist_ok=True)
     os.environ["HF_HOME"] = hf_cache_dir
 
+    # Disable symlinks for HuggingFace caching.
+    # Windows Server 2012 R2 lacks native support for Developer Mode symlinks without elevated privileges.
+    # When `huggingface_hub` tries to create symlinks for models, it triggers a PermissionError.
+    os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+    os.environ["HF_HUB_DISABLE_SYMLINKS"] = "1"
+
+    # Cleanup incomplete HuggingFace downloads or lingering lock files.
+    # A previous download may have been interrupted, leaving a .lock file that causes PermissionError
+    # or corrupted .incomplete files that prevent startup.
+    print("Checking cache directory for interrupted downloads...")
+    for root, dirs, files in os.walk(hf_cache_dir):
+        for file in files:
+            if file.endswith(".lock") or file.endswith(".incomplete"):
+                locked_file = os.path.join(root, file)
+                try:
+                    os.remove(locked_file)
+                    print(f"Removed stale lock/incomplete file: {locked_file}")
+                except Exception as e:
+                    print(f"Warning: Could not remove {locked_file}: {e}")
+
     print("Checking system ports...")
     if check_port_in_use(PORT, HOST):
         print(f"\n[ERROR] Port {PORT} is already in use by another service on this system.")

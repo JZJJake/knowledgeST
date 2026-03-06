@@ -12,6 +12,7 @@ backend/data.db
 backend/chroma_db/
 backend/chroma_db
 backend/hf_cache/
+test_cache/
 
 # Environments
 .env
