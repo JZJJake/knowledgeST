@@ -30,9 +30,18 @@ if __name__ == "__main__":
     PORT = 8000
     HOST = "127.0.0.1"
 
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
     # Force HuggingFace to use a domestic mirror to prevent connection timeouts
     # when downloading the sentence-transformers embedding model for the first time.
     os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+
+    # Configure a local HuggingFace cache directory within the project folder.
+    # This prevents PermissionError on Windows Server 2012 R2 if the default
+    # ~/.cache/huggingface folder is locked by an interrupted download or another user profile.
+    hf_cache_dir = os.path.join(current_dir, "backend", "hf_cache")
+    os.makedirs(hf_cache_dir, exist_ok=True)
+    os.environ["HF_HOME"] = hf_cache_dir
 
     print("Checking system ports...")
     if check_port_in_use(PORT, HOST):
@@ -47,7 +56,6 @@ if __name__ == "__main__":
 
     # We construct a local file path or server endpoint URL for the browser
     # Since we are using an API-only FastAPI implementation and static HTML:
-    current_dir = os.path.dirname(os.path.abspath(__file__))
     frontend_path = os.path.join(current_dir, "frontend", "index.html")
     file_url = f"file:///{frontend_path.replace(os.sep, '/').lstrip('/')}"
 
