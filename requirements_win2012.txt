@@ -9,6 +9,9 @@ pydantic==2.7.0
 openai==1.14.0
 sentence-transformers==2.7.0
 
+# Prevent NumPy 2.0+ which removes `np.float_` causing ChromaDB crashes
+numpy==1.26.4
+
 # ChromaDB 0.5.0+ migrated away from the problematic 'hnswlib' to 'chroma-hnswlib',
 # which natively distributes pre-compiled Windows wheels (cp311-win_amd64) on PyPI.
 # This strictly avoids local C++ compilation.
