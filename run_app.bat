@@ -20,30 +20,39 @@ if errorlevel 1 (
 
 set /p PYTHON_VERSION=<python_ver.tmp
 del python_ver.tmp
-echo Detected: %PYTHON_VERSION%
+echo Detected: !PYTHON_VERSION!
+
+:: Default versions just in case parsing fails
+set MAJOR=0
+set MINOR=0
 
 :: Extract major and minor version numbers (e.g., "Python 3.11.5" -> "3" and "11")
-for /f "tokens=2 delims= " %%a in ("%PYTHON_VERSION%") do set VER_STRING=%%a
-for /f "tokens=1,2 delims=." %%a in ("%VER_STRING%") do (
-    set MAJOR=%%a
-    set MINOR=%%b
+for /f "tokens=2 delims= " %%a in ("!PYTHON_VERSION!") do set VER_STRING=%%a
+if defined VER_STRING (
+    for /f "tokens=1,2 delims=." %%a in ("!VER_STRING!") do (
+        set MAJOR=%%a
+        set MINOR=%%b
+    )
 )
 
-if "%MAJOR%" neq "3" (
-    echo [ERROR] Unsupported Python major version. Requires Python 3.11.x.
+if !MAJOR! neq 3 (
+    echo [ERROR] Unsupported Python major version. Detected !MAJOR!. Requires Python 3.11.x.
     goto ErrorExit
 )
-if %MINOR% gtr 11 (
-    echo [ERROR] Detected Python %MAJOR%.%MINOR%. Version higher than 3.11 detected!
-    echo The dependency pre-compiled binaries (Wheels) are locked specifically for Python 3.11 to prevent C++ compilation on Windows Server 2012 R2.
+
+if !MINOR! gtr 11 (
+    echo [ERROR] Detected Python !MAJOR!.!MINOR!. Version higher than 3.11 detected!
+    echo The dependency pre-compiled binaries ^(Wheels^) are locked specifically for Python 3.11 to prevent C++ compilation on Windows Server 2012 R2.
     echo Please downgrade or use a Python 3.11 environment.
     goto ErrorExit
-) else if %MINOR% lss 11 (
-    echo [ERROR] Unsupported Python minor version. Requires Python 3.11.x.
-    goto ErrorExit
-) else (
-    echo Python version 3.11 check passed.
 )
+
+if !MINOR! lss 11 (
+    echo [ERROR] Unsupported Python minor version. Detected 3.!MINOR!. Requires Python 3.11.x.
+    goto ErrorExit
+)
+
+echo Python version 3.11 check passed.
 
 :: 2. Sandbox Isolation: Check/Create Virtual Environment
 echo.

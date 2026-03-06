@@ -5,12 +5,11 @@ fastapi==0.103.1
 uvicorn==0.23.2
 sqlalchemy==2.0.21
 aiohttp==3.8.5
-pydantic==1.10.13
+pydantic==2.7.0
 openai==1.14.0
-sentence-transformers==2.2.2
+sentence-transformers==2.7.0
 
-# ChromaDB and its dependencies are notorious for requiring C++ build tools on Windows
-# Pinning to a specific version that provides pre-compiled hnswlib wheels for Python 3.11 Windows.
-# hnswlib 0.7.0 has cp311-win_amd64 wheels.
-hnswlib==0.7.0
-chromadb==0.4.14
+# ChromaDB 0.5.0+ migrated away from the problematic 'hnswlib' to 'chroma-hnswlib',
+# which natively distributes pre-compiled Windows wheels (cp311-win_amd64) on PyPI.
+# This strictly avoids local C++ compilation.
+chromadb==0.5.0
